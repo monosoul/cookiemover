@@ -1,0 +1,29 @@
+{
+  "description": "A plugin to move cookies from Google Chrome to Firefox",
+  "manifest_version": 2,
+  "name": "Cookie mover",
+  "version": "0.0.1",
+  "icons": {
+    "48": "icons/refresh.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cookiemover@monosoul.dev",
+      "strict_min_version": "50.0"
+    }
+  },
+  "background": {
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "icons/refresh.svg"
+  },
+  "permissions": [
+    "nativeMessaging",
+    "tabs",
+    "cookies",
+    "<all_urls>"
+  ]
+}

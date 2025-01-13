@@ -19,3 +19,8 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Include Run configurations
+!.idea/
+.idea/*
+!.idea/runConfigurations
