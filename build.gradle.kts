@@ -58,10 +58,21 @@ dependencies {
 }
 
 tasks {
-    register<Zip>("extensionDist") {
+    val extensionDist by registering(Zip::class) {
         group = "distribution"
         from("extension/add-on")
         archiveBaseName = "cookiemover-extension"
         destinationDirectory = layout.buildDirectory.dir("extension-distribution")
+    }
+
+    register<Zip>("assembleFullDist") {
+        group = "distribution"
+        from(nativeCompile)
+        from(extensionDist)
+        from("extension/app/cookiemover.json")
+        from("README.txt")
+        archiveBaseName = "cookiemover-full"
+
+        destinationDirectory = layout.buildDirectory.dir("full-distribution")
     }
 }
