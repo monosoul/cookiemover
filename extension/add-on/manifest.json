@@ -2,7 +2,7 @@
   "description": "A plugin to move cookies from Google Chrome to Firefox",
   "manifest_version": 2,
   "name": "Cookie mover",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icons": {
     "48": "icons/refresh.svg"
   },

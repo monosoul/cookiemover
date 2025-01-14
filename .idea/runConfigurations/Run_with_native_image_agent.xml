@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run with native image agent" type="JetRunConfigurationType">
+    <option name="MAIN_CLASS_NAME" value="dev.monosoul.cookiemover.App" />
+    <module name="cookiemover.main" />
+    <shortenClasspath name="NONE" />
+    <option name="VM_PARAMETERS" value="-agentlib:native-image-agent=config-output-dir=src/main/resources/META-INF/native-image" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
