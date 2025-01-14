@@ -93,7 +93,7 @@ class ChromeRunner(
     private fun waitForAuthentication() = backgroundScope.launch {
         val session = cdpClient.webSocket()
         val target = session.target.getTargets().targetInfos.single {
-            it.type == "page" && it.url.contains(url.host)
+            it.type == "page" && URI(it.url).hostContains(url.host)
         }
 
         val pageSession = session.attachToTarget(target.targetId).asPageSession()
@@ -119,7 +119,7 @@ class ChromeRunner(
             when (it) {
                 is PageEvent.FrameNavigated -> {
                     // when navigate to octa, then probably authentication happened
-                    if (it.frame.url.contains("okta.com")) {
+                    if (URI(it.frame.url).hostContains("okta.com")) {
                         authenticated.set(true)
                     }
                 }
@@ -147,13 +147,13 @@ class ChromeRunner(
                     val currentTime = clock.instant()
                     val timeSinceTheLastEvent = Duration.between(lastEventValue.timestamp, currentTime).toMillis()
                     val navHistory = page.getNavigationHistory()
-                    val currentUrl = navHistory.entries[navHistory.currentIndex].url
-                    targetUrl.set(URI(currentUrl))
+                    val currentUrl = URI(navHistory.entries[navHistory.currentIndex].url)
+                    targetUrl.set(currentUrl)
                     if (
                         authenticated.get()
                         && timeSinceTheLastEvent > 600
                         && lastEventValue.isFinal()
-                        && currentUrl.contains(url.host)
+                        && currentUrl.hostContains(url.host)
                     ) {
                         break
                     }
@@ -192,3 +192,5 @@ private fun EventAndTimestamp?.isFinal() = when (this?.event) {
     is PageEvent.FrameStoppedLoading -> true
     else -> false
 }
+
+private fun URI.hostContains(host: String): Boolean = (this.host ?: "").contains(host)
