@@ -5,8 +5,8 @@ function getActiveTab() {
 function onResponse(tab) {
     return function (response) {
         console.log("Importing cookies")
-        response.map((cookie) => {
-            return {
+        response.cookies.map((cookie) => {
+            let newCookie = {
                 domain: cookie.domain || '',
                 name: cookie.name || '',
                 value: cookie.value || '',
@@ -18,12 +18,16 @@ function onResponse(tab) {
                 storeId: tab.cookieStoreId || null,
                 url: tab.url,
             };
+            if (cookie.sameSite === "unspecified") {
+                newCookie.sameSite = null;
+            }
+            return newCookie;
         }).forEach((cookie) => {
-            browser.cookies.remove({name: cookie.name, url: tab.url});
+            browser.cookies.remove({name: cookie.name, url: response.targetUrl});
             browser.cookies.set(cookie);
         })
 
-        browser.tabs.reload(tab.id).then(() => {
+        browser.tabs.update(tab.id, {active: true, url: `${response.targetUrl}`}).then(() => {
             browser.windows.update(tab.windowId, {focused: true});
         });
     }
@@ -40,8 +44,13 @@ browser.browserAction.onClicked.addListener(() => {
     console.log("Calling cookie mover");
     getActiveTab().then((tabs) => {
         let tab = tabs[0]
-        let sending = browser.runtime.sendNativeMessage("cookiemover", {"url": `${tab.url}`});
+        browser.cookies.getAll({url: tab.url}).then((cookies) => {
+            let sending = browser.runtime.sendNativeMessage("cookiemover", {
+                "url": `${tab.url}`,
+                "existingCookies": cookies
+            });
 
-        sending.then(onResponse(tab), onError);
+            sending.then(onResponse(tab), onError);
+        })
     })
 });

@@ -55,6 +55,13 @@ dependencies {
 
     implementation(enforcedPlatform("org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.10.1"))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+
+    implementation("org.hildan.chrome:chrome-devtools-kotlin:7.0.0-1400418")
+    implementation(enforcedPlatform("io.ktor:ktor-bom:3.0.3"))
+    implementation("io.ktor:ktor-client-java")
+    implementation("io.ktor:ktor-client-content-negotiation")
+    implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-client-websockets")
 }
 
 tasks {
