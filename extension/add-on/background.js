@@ -2,9 +2,13 @@ function getActiveTab() {
     return browser.tabs.query({active: true, currentWindow: true});
 }
 
-function onResponse(tab) {
+function onResponse(oldCookies, tab) {
     return function (response) {
-        console.log("Importing cookies")
+        console.log("Removing old cookies")
+        oldCookies.forEach(cookie => {
+            browser.cookies.remove({name: cookie.name, url: tab.url});
+        })
+        console.log("Importing new cookies")
         response.cookies.map((cookie) => {
             let newCookie = {
                 domain: cookie.domain || '',
@@ -50,7 +54,7 @@ browser.browserAction.onClicked.addListener(() => {
                 "existingCookies": cookies
             });
 
-            sending.then(onResponse(tab), onError);
+            sending.then(onResponse(cookies, tab), onError);
         })
     })
 });
