@@ -20,13 +20,11 @@ object ExtensionIOHandler {
          * so we can't read it as a regular signed int, instead we'll read it as long and then
          * try to convert it to a signed int throwing an exception in case of overflow
          */
-        val inputLength = ByteBuffer
-            .wrap(
-                inputStream
-                    .readNBytes(Int.SIZE_BYTES)
-                    .reversedArray()
-                    .copyInto(ByteArray(Long.SIZE_BYTES) { 0 }, Int.SIZE_BYTES)
-            )
+        val inputLength = inputStream
+            .readNBytes(Int.SIZE_BYTES)
+            .reversedArray()
+            .copyInto(ByteArray(Long.SIZE_BYTES) { 0 }, Int.SIZE_BYTES)
+            .let(ByteBuffer::wrap)
             .getLong()
             .let(Math::toIntExact)
 
