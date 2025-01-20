@@ -32,8 +32,9 @@ import java.util.concurrent.atomic.AtomicReference
 import kotlin.time.Duration.Companion.seconds
 
 class ChromeRunner(
-    private val execPath: File,
     private val url: URI,
+    private val authDomain: String,
+    private val execPath: File,
     private val defaultDataDirPath: File,
     private val appDataDirPath: File,
     private val clock: Clock,
@@ -118,8 +119,8 @@ class ChromeRunner(
             // listen to page events
             when (it) {
                 is PageEvent.FrameNavigated -> {
-                    // when navigate to octa, then probably authentication happened
-                    if (URI(it.frame.url).hostContains("okta.com")) {
+                    // when navigate to the auth domain, then probably authentication happened
+                    if (URI(it.frame.url).hostContains(authDomain)) {
                         authenticated.set(true)
                     }
                 }

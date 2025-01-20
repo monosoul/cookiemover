@@ -44,17 +44,29 @@ function onError(error) {
 /*
 On a click on the browser action, send the app a message.
 */
-browser.browserAction.onClicked.addListener(() => {
+async function onBrowserActionClick() {
     console.log("Calling cookie mover");
-    getActiveTab().then((tabs) => {
-        let tab = tabs[0]
-        browser.cookies.getAll({url: tab.url}).then((cookies) => {
-            let sending = browser.runtime.sendNativeMessage("cookiemover", {
-                "url": `${tab.url}`,
-                "existingCookies": cookies
-            });
+    let tabs = await getActiveTab()
+    let tab = tabs[0]
 
-            sending.then(onResponse(cookies, tab), onError);
-        })
-    })
-});
+    let options = await browser.storage.sync.get({
+        authDomain: "okta.com",
+        chromeExecPath: "",
+        chromeDataDirPath: "",
+        appDataDirPath: "",
+    });
+
+    let cookies = await browser.cookies.getAll({url: tab.url})
+    let sending = browser.runtime.sendNativeMessage("cookiemover", {
+        "url": `${tab.url}`,
+        "existingCookies": cookies,
+        "authDomain": options.authDomain,
+        "chromeExecPath": options.chromeExecPath,
+        "chromeDataDirPath": options.chromeDataDirPath,
+        "appDataDirPath": options.appDataDirPath,
+    });
+
+    sending.then(onResponse(cookies, tab), onError);
+}
+
+browser.browserAction.onClicked.addListener(onBrowserActionClick);

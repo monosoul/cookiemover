@@ -24,6 +24,11 @@
     "nativeMessaging",
     "tabs",
     "cookies",
+    "storage",
     "<all_urls>"
-  ]
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": true
+  }
 }

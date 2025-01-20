@@ -16,18 +16,23 @@ object App {
 
     private fun dataDir() = File(System.getProperty("user.home"), "Library/Application Support/Google")
 
+    private fun String.toFile() = takeIf { it.isNotBlank() }?.let(::File)
+
     @JvmStatic
     fun main(args: Array<String>) {
 
         val input = ExtensionIOHandler.readInput(System.`in`)
 
-        val chromeDataDirPath = input.chromeDataDirPath?.let(::File) ?: File(dataDir(), "Chrome")
-        val appDataDirPath = input.appDataDirPath?.let(::File) ?: File(dataDir(), "Cookiemover")
+        val chromeDataDirPath = input.chromeDataDirPath.toFile() ?: File(dataDir(), "Chrome")
+        val appDataDirPath = input.appDataDirPath.toFile() ?: File(dataDir(), "Cookiemover")
         val chromeExecPath =
-            input.chromeExecPath?.let(::File) ?: File("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+            input.chromeExecPath.toFile() ?: File("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
         val url = URI(input.url)
+        val authDomain = input.authDomain
+        require(authDomain.isNotBlank()) { "Auth domain cannot be blank" }
 
-        val targetUrl = ChromeRunner(chromeExecPath, url, chromeDataDirPath, appDataDirPath, CLOCK).runChrome()
+        val targetUrl = ChromeRunner(url, authDomain, chromeExecPath, chromeDataDirPath, appDataDirPath, CLOCK)
+            .runChrome()
         val cookieStorePath = File(appDataDirPath, "Default/Cookies")
 
         val output = Output(
