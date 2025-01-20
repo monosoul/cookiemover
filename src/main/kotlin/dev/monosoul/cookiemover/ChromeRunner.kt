@@ -49,9 +49,9 @@ class ChromeRunner(
                 retryOnExceptionOrServerErrors(100)
             }
             install(HttpTimeout) {
-                socketTimeoutMillis = 30.seconds.inWholeMilliseconds
-                connectTimeoutMillis = 30.seconds.inWholeMilliseconds
-                requestTimeoutMillis = 30.seconds.inWholeMilliseconds
+                socketTimeoutMillis = 5.seconds.inWholeMilliseconds
+                connectTimeoutMillis = 5.seconds.inWholeMilliseconds
+                requestTimeoutMillis = 5.seconds.inWholeMilliseconds
             }
             install(ContentNegotiation) { json(JSON) }
             install(WebSockets)
