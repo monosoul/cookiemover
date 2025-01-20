@@ -25,7 +25,7 @@ graalvmNative {
             "--initialize-at-build-time=dev.monosoul.cookiemover.App",
             "--initialize-at-build-time=pt.davidafsilva.apple.OSXKeychain",
             "-march=native",
-            "-R:MaxHeapSize=64m",
+            "-R:MaxHeapSize=128m",
             "--strict-image-heap",
         )
     }
