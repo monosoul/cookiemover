@@ -76,8 +76,10 @@ tasks {
         group = "distribution"
         from(nativeCompile)
         from(extensionDist)
-        from("extension/app/cookiemover.json")
-        from("README.txt")
+        from("extension/app")
+        from(".") {
+            include("README_*.txt")
+        }
         archiveBaseName = "cookiemover-full"
 
         destinationDirectory = layout.buildDirectory.dir("full-distribution")
