@@ -1,0 +1,9 @@
+{
+  "name": "cookiemover",
+  "description": "Cookie mover backend",
+  "path": "/opt/cookiemover",
+  "type": "stdio",
+  "allowed_origins": [
+    "chrome-extension://emkhbacbhcngljhdocojoceobommbfoj/"
+  ]
+}
